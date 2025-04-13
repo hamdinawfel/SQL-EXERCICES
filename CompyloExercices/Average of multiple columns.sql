@@ -1,7 +1,9 @@
+-- =============================================
+-- Author:		Nawfel HAMDI
+-- Create date: 12/04/2025
+-- Description:	Average of multiple columns
+-- =============================================
 
----------------------------------------------------------------
---1: Average of multiple columns
----------------------------------------------------------------
 SELECT Student_Name,
    (SELECT ROUND(AVG(c), 2) 
       FROM (VALUES(PC_Semester_1),
