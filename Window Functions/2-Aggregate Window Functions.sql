@@ -110,3 +110,27 @@ FROM Customers
 	 FROM Orders
 	 ) AS T 
  WHERE Sales > AvgSales
+
+ -- MIN() / MAX()
+
+ SELECT
+	 OrderId,
+	 OrderDate,
+	 Sales,
+	 ProductId,
+	 MIN(Sales) OVER() MinSales,
+	 MAX(Sales) OVER() MaxSales,
+	 MIN(Sales) OVER(PARTITION BY ProductId) MinSalesByProduct,
+	 MAX(Sales) OVER(PARTITION BY ProductId) MaxSalesByProduct
+ FROM Orders
+
+ -- #USE CASE : COMPARE TO EXTREME
+ -- Task : Find the diviation of each sales from the minimum and maximum sales
+  SELECT
+	 OrderId,
+	 Sales,
+	 MIN(Sales) OVER() MinSales,
+	 MAX(Sales) OVER() MaxSales,
+	 Sales - MIN(Sales) OVER() AS DiviationFromMin,
+	 ABS(Sales - MAX(Sales) OVER()) AS DiviationFromMax
+ FROM Orders
