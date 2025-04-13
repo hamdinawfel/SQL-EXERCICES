@@ -25,3 +25,7 @@
 ![Screenshot (1137)](https://github.com/user-attachments/assets/65b7e590-353b-4927-b6b5-1612cae36d9f)
 ![Screenshot (1138)](https://github.com/user-attachments/assets/703da9a4-eec1-4b61-ba8e-951382389366)
 ![Screenshot (1140)](https://github.com/user-attachments/assets/f919fa86-7630-4b04-a022-77170581d258)
+
+## ROW_NUMBER() | RANK() | DENSE_RANK()
+
+![Screenshot (1141)](https://github.com/user-attachments/assets/cddd1268-59f0-4701-b003-1f9fb1586cc8)
