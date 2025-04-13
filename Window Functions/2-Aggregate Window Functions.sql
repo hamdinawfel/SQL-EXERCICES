@@ -1,7 +1,76 @@
 -- =============================================
 -- Author:		Nawfel HAMDI
 -- Create date: 13/04/2025
--- Description:	Window Functions
+-- Description:	Aggrigate Window Functions
 -- Link : https://datawithbaraa.substack.com/p/your-guide-to-sql-window-functions - https://www.youtube.com/watch?v=Wvg4PjbMTO8
 -- =============================================
 
+-- COUNT()
+-- Task : Find the number of orders
+-- #USE CASE : Overal Analyses
+USE Compylo_SQL_InterviewQuestions
+GO
+SELECT 
+    COUNT(*) AS TotalOrders
+FROM Orders
+
+-- Task : Find the number of orders and provide details for OrderId, OrderDate
+SELECT 
+	OrderId,
+	OrderDate,
+    COUNT(*) OVER() AS TotalOrders
+FROM Orders
+
+-- Task : Find the number of orders for each customer and provide details for OrderId, OrderDate
+-- #USE CASE : Group-wise analysis to understand pattern within deffirent categories
+
+SELECT 
+	OrderId,
+	OrderDate,
+	CustomerId,
+	COUNT(*) OVER(PARTITION BY CustomerId) AS TotalOrdersByCustomer,
+    COUNT(*) OVER() AS TotalOrders
+FROM Orders
+-- Task : Find  the total number of Customers and their total scores
+-- #USE CASE : Data Quality check : detecting number of nulls by comparing to total number of rows
+
+CREATE TABLE Customers (
+CustomerId INT IDENTITY(1,1),
+FistName VARCHAR(50) NULL,
+LastName VARCHAR(50) NULL,
+Country VARCHAR(50) NULL,
+Score INT NULL
+);
+
+INSERT INTO Customers (FistName, LastName, Country, Score) VALUES
+('John',     'Doe',       'USA',        85),
+('Emily',    'Smith',     'Canada',     90),
+('Liam',     'Johnson',   'UK',         78),
+('Olivia',   'Brown',     'Australia',  88),
+('Noah',     'Jones',     'USA',        92),
+('Ava',      'Garcia',    'Mexico',     80),
+('William',  'Miller',    'Canada',     75),
+('Sophia',   'Davis',     'UK',         89),
+('James',    NULL,  'Spain',      83),
+('Isabella', 'Lopez',     'USA',        NULL);
+
+SELECT *,
+       COUNT(*) OVER() AS TotalCustomersWithStar,
+	   COUNT(1) OVER() AS TotalCustomersWith1,
+	   COUNT(Country) OVER() AS TotalCountries,
+	   COUNT(Score) OVER() AS TotalScore -- TotalCountries <> TotalScore => row with null is missing
+FROM Customers
+ 
+
+ -- Task : Check if orders table contains any duplicates rows
+ -- #USE CASE : Identify Duplicates
+ SELECT * 
+ FROM (
+	 SELECT 
+		OrderId,
+		COUNT(*) OVER(PARTITION BY OrderId) AS CheckPK
+	 FROM Orders
+ ) AS T 
+ WHERE CheckPK > 1
+
+ -- SUM()
