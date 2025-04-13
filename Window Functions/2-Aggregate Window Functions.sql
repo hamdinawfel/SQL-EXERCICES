@@ -74,3 +74,11 @@ FROM Customers
  WHERE CheckPK > 1
 
  -- SUM()
+ -- #USE CASE : PART-TO-WHOLE : shows the contribution of each data point to the everall dataset
+ -- Task : Find the percentage of each product sales to the total sales
+
+ SELECT 
+	 *,
+	 SUM(Sales) OVER() AS TotalSales,
+	 ROUND(CAST (Sales AS FLOAT) / SUM(Sales) OVER() * 100 , 2) AS PercentageOfProduct
+ FROM Orders
