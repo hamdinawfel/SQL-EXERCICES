@@ -16,3 +16,5 @@ Select *
  From  dbo.EmpDeptWiseSalary
       ) EDWS
  Where RowNum = case when CountLogic < 3 then CountLogic else 3 end
+
+ -- See Window Fuctions Section
