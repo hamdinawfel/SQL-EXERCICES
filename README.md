@@ -8,3 +8,8 @@
 # COUNT()
 
 ![Screenshot (1123)](https://github.com/user-attachments/assets/6fdab4c8-e86b-4ac4-914a-fd072e18d46b)
+
+# AVG()
+
+
+![Screenshot (1125)](https://github.com/user-attachments/assets/d12109d5-cf9a-4821-ac51-f5d42f458c9e)
