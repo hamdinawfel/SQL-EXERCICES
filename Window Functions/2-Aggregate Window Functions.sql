@@ -82,3 +82,31 @@ FROM Customers
 	 SUM(Sales) OVER() AS TotalSales,
 	 ROUND(CAST (Sales AS FLOAT) / SUM(Sales) OVER() * 100 , 2) AS PercentageOfProduct
  FROM Orders
+
+ -- AVG()
+ SELECT 
+	 OrderId,
+	 Sales,
+	 AVG(Sales) OVER () AS AverageSales,
+	 --SUM(Sales) OVER() / COUNT(*) OVER() AS AverageSales,
+	 AVG(Sales) OVER (PARTITION BY ProductId) AS AverageByProduct
+ FROM Orders
+
+ -- Handle NULL with COALESCE
+
+ SELECT *,
+    COALESCE(Score, 0) AS CustomerScore,
+	AVG(Score) OVER() AS AvgScores,
+	AVG(COALESCE(Score, 0)) OVER() AS AvgScoresWithoutNull
+ FROM Customers
+
+ -- #USE CASE : COMPARE TO AVERGE
+ -- Task : Find all orders where sales are higer than the average sales across the orders
+ SELECT * FROM (
+	 SELECT
+		 OrderId,
+		 Sales,
+		AVG(Sales) OVER() AS AvgSales
+	 FROM Orders
+	 ) AS T 
+ WHERE Sales > AvgSales
