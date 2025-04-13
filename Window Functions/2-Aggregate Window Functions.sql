@@ -134,3 +134,26 @@ FROM Customers
 	 Sales - MIN(Sales) OVER() AS DiviationFromMin,
 	 ABS(Sales - MAX(Sales) OVER()) AS DiviationFromMax
  FROM Orders
+
+ --#USE CASE : MOVING/ROLLING AVERAGE
+ -- Task : Find moving average of sales for each product over time
+ SELECT
+	 OrderId,
+	 OrderDate,
+	 ProductId,
+	 Sales,
+	 AVG(Sales) OVER(PARTITION BY ProductId) AS MovingAverage,
+	 AVG(Sales) OVER(PARTITION BY ProductId ORDER BY OrderDate) AS MovingAverage 
+ FROM Orders
+
+ -- Task : Find moving average of sales for each product over time, including only the next order
+ SELECT
+	 OrderId,
+	 OrderDate,
+	 ProductId,
+	 Sales,
+	 AVG(Sales) OVER(PARTITION BY ProductId) AS MovingAverage,
+	 AVG(Sales) OVER(PARTITION BY ProductId ORDER BY OrderDate) AS MovingAverage ,
+	 AVG(Sales) OVER(PARTITION BY ProductId ORDER BY OrderDate
+	 ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS RollingAverage 
+ FROM Orders
