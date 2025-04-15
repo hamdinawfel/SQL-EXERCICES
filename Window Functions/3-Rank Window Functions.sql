@@ -16,3 +16,59 @@ SELECT
 	RANK()       OVER(ORDER BY Sales DESC) AS RankedSales_Rank, -- shared ranks / gap (skip)
 	DENSE_RANK() OVER(ORDER BY Sales DESC) AS RankedSales_Dense -- shared ranks / no gap (not skip)
 FROM Orders
+
+--#USE CASE : TOP N ANALYSES
+-- TASK : Find the top highest sales for each product
+
+SELECT * FROM (
+SELECT 
+	OrderId,
+	ProductId,
+	Sales,
+	ROW_NUMBER() OVER(PARTITION BY ProductId ORDER BY Sales DESC) RankSalesByProduct
+FROM Orders
+) AS T 
+WHERE RankSalesByProduct = 1
+
+--#USE CASE : BOTTOM N ANALYSES
+-- TASK : Find the 2 lowest customers based on their total sales
+
+SELECT * FROM (
+SELECT 
+	CustomerId,
+	SUM(SALES) AS TotalSales,
+	ROW_NUMBER() OVER(ORDER BY SUM(SALES)) AS RankCustomers
+FROM Orders
+GROUP BY CustomerId
+) AS T WHERE RankCustomers <= 2
+
+
+--#USE CASE : UNIQUE IDENTIIFER
+-- TASK : assign unique ids for ArchiveOrders table
+CREATE TABLE ArchiveOrders(
+OrderId INT,
+ArchivedDate DATE
+)
+
+INSERT INTO ArchiveOrders (OrderId, ArchivedDate) VALUES
+(1, '2025-04-01'),
+(2, '2025-04-02'),
+(3, '2025-04-03'),
+(1, '2025-04-01'),  -- Duplicate OrderId
+(4, '2025-04-06'),
+(2, '2025-04-07'),  -- Duplicate OrderId
+(5, '2025-04-08'),
+(6, '2025-04-09'),
+(3, '2025-04-03'),  -- Duplicate OrderId
+(7, '2025-04-11');
+
+SELECT *,
+	ROW_NUMBER() OVER(ORDER BY ArchivedDate) AS Id
+FROM ArchiveOrders
+
+-- USE CASE : Identify ducplucates 
+SELECT * FROM (
+SELECT *,
+	ROW_NUMBER() OVER(PARTITION BY OrderId ORDER BY ArchivedDate) AS rn
+FROM ArchiveOrders
+) AS T WHERE rn = 1
