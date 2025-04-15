@@ -72,3 +72,37 @@ SELECT *,
 	ROW_NUMBER() OVER(PARTITION BY OrderId ORDER BY ArchivedDate) AS rn
 FROM ArchiveOrders
 ) AS T WHERE rn = 1
+
+--NTILE()
+-- backet size = number of rows / number of backets | Larger group cam first
+SELECT 
+	OrderId,
+	Sales,
+	NTILE(4) OVER(ORDER BY Sales DESC) AS _4Backets,
+	NTILE(3) OVER(ORDER BY Sales DESC) AS _3Backets,
+	NTILE(3) OVER(ORDER BY Sales DESC) AS _2Backets,
+	NTILE(1) OVER(ORDER BY Sales DESC) AS _1Backets
+FROM Orders
+
+-- #USE CASE : DATA SEGMENTATION
+-- TASK : Segment order into 3 categories , hight, medium , low
+
+SELECT *,
+	CASE WHEN Backets = 1 THEN 'Hight'
+	     WHEN Backets = 2 THEN 'Medium'
+	     WHEN Backets = 3 THEN 'Low'
+    END AS SalesSegmentations
+FROM (
+	SELECT 
+		OrderId,
+		Sales,
+		NTILE(3) OVER(ORDER BY Sales DESC) AS Backets
+	FROM Orders
+) AS T
+
+-- #USE CASE : LOED BALANCE
+SELECT 
+	OrderId,
+	Sales,
+	NTILE(2) OVER (ORDER BY OrderId) AS Batch
+FROM Orders
