@@ -106,3 +106,26 @@ SELECT
 	Sales,
 	NTILE(2) OVER (ORDER BY OrderId) AS Batch
 FROM Orders
+
+--CUME_DIST() | PERCENT_RANK()
+-- TASK : Find the sales that fall within the highest 40% of the prices
+SELECT *,
+CONCAT(DistRank * 100, '%') AS DistRankPerc
+FROM (
+	SELECT 
+		OrderId,
+		Sales,
+		CUME_DIST() OVER (ORDER BY Sales DESC) AS DistRank
+	FROM Orders
+) AS T WHERE DistRank <= 0.4
+
+SELECT *,
+CONCAT(DistRank * 100, '%') AS DistRankPerc
+FROM (
+	SELECT 
+		OrderId,
+		Sales,
+		PERCENT_RANK() OVER (ORDER BY Sales DESC) AS DistRank
+	FROM Orders
+) AS T WHERE DistRank <= 0.4
+
