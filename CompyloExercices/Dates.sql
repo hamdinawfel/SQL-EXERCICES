@@ -30,3 +30,18 @@ SELECT CONVERT(VARCHAR(255), EOMONTH(DATEADD(MONTH, -1, GETDATE())), 104)
 SELECT CONVERT(VARCHAR(255), EOMONTH(DATEADD(MONTH, -1, GETDATE())), 105)
 SELECT CONVERT(VARCHAR(255), EOMONTH(DATEADD(MONTH, -1, GETDATE())), 106)
 SELECT CONVERT(VARCHAR(255), EOMONTH(DATEADD(MONTH, -1, GETDATE())), 107)
+
+-- Find the number of working days
+
+SELECT * FROM [dbo].[Interview_Calendar]
+SELECT * FROM [dbo].[Holiday_Table]
+
+DECLARE @StartDate DATE = '2023-01-01'
+DECLARE @EndDate DATE = '2023-01-31'
+
+SELECT * 
+FROM [dbo].[Interview_Calendar] AS I
+JOIN [dbo].[Holiday_Table] AS H
+ON I.Cal_Date = H.Calendar_Date
+WHERE I.Cal_Date BETWEEN @StartDate AND @EndDate
+AND I.Working_Day = 'Y'
